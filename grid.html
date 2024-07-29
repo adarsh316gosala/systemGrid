@@ -1,0 +1,82 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status</title>
+    <style>
+    /* Reset default styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.system-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.system-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.system-card p {
+    margin-bottom: 5px;
+}
+    
+    </style>
+</head>
+
+<body>
+<form action="StatusServlet" method="get">
+    <div class="grid-container" id="systemGrid">
+        <!-- Systems will be dynamically added here -->
+    </div>
+
+    <script>
+        // Fetch data from backend and dynamically generate HTML
+        async function fetchData() {
+            try {
+                const response = await fetch('/StatusServlet'); // Adjust URL if needed
+                const data = await response.json();
+
+                const gridContainer = document.getElementById('systemGrid');
+                data.forEach(system => {
+                    const systemCard = document.createElement('div');
+                    systemCard.classList.add('system-card');
+                    systemCard.innerHTML = `
+                        <h3>${system.systemName}</h3>
+                        <p><strong>IP Address:</strong> ${system.ipAddress}</p>
+                        <p><strong>Status:</strong> ${system.status}</p>
+                        <p><strong>MAC Address:</strong> ${system.macAddress}</p>
+                    `;
+                    gridContainer.appendChild(systemCard);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchData();
+    </script>
+    </form>
+</body>
+</html>
+ 
